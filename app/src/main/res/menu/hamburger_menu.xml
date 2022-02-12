@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/home"
+        android:title="Home"/>
+    <item android:id="@+id/history"
+        android:title="History"/>
+    <item android:id="@+id/alerts"
+        android:title="Alerts"/>
+    <item android:id="@+id/spray_information"
+        android:title="Spray Information"/>
+    <item android:id="@+id/community_guideline"
+        android:title="Community Guidelines"/>
+    <item android:id="@+id/log_out"
+        android:title="Log Out"/>
+
+</menu>
