@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/drawer"
+    tools:openDrawer="start"
     tools:context=".Controller.MainActivityController">
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -12,12 +14,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/toolbar"
-            app:title="Aerial Inspector"
-            android:background="@color/dark_green"
             app:titleTextColor="@color/cardview_light_background"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/container"/>
 
     </RelativeLayout>
-
+    <com.google.android.material.navigation.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/nav_view"
+        app:menu="@menu/hamburger_menu"
+        app:headerLayout="@layout/nav_header"
+        android:layout_gravity="start"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>
 
