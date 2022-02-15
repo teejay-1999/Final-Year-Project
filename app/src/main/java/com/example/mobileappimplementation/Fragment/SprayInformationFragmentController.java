@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +22,8 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.mobileappimplementation.Adapter.AlertAdapter;
+import com.example.mobileappimplementation.Adapter.SprayInformationAdapter;
 import com.example.mobileappimplementation.Controller.CommonVariables;
 import com.example.mobileappimplementation.R;
 
@@ -92,6 +96,7 @@ public class SprayInformationFragmentController extends Fragment {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, completeURL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewSpray);
                 try {
                     System.out.println(response);
                     Spinner cropName = (Spinner) view.findViewById(R.id.crop_name);
@@ -119,8 +124,8 @@ public class SprayInformationFragmentController extends Fragment {
                         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                             String text = adapterView.getItemAtPosition(i).toString();
                             if(!(text.equals("Crop Name")) ){
-                                Spinner disease = (Spinner) view.findViewById(R.id.disease_name);
                                 ArrayList<String> diseaseList = new ArrayList<String>();
+                                diseaseList.add("Disease Name");
                                 String lastInsertedValue = "0";
                                 for(int j = 0; j < jsonArray.length(); j++){
                                     String temp = null;
@@ -137,7 +142,38 @@ public class SprayInformationFragmentController extends Fragment {
                                     }
                                 }
                                 ArrayAdapter diseaseAdapter = new ArrayAdapter<String>(view.getContext(),R.layout.support_simple_spinner_dropdown_item,diseaseList);
-                                disease.setAdapter(diseaseAdapter);
+                                diseaseName.setAdapter(diseaseAdapter);
+                                diseaseName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                    @Override
+                                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                                        String text = adapterView.getItemAtPosition(i).toString();
+                                        if (!(text.equals("Disease Name"))){
+                                            ArrayList<String> sprayDescriptionList = new ArrayList<String>();
+                                            String lastInsertedValue = "0";
+                                            for(int j = 0; j < jsonArray.length(); j++){
+                                                String temp = null;
+                                                String diseaseName = null;
+                                                try {
+                                                    diseaseName = jsonArray.getJSONObject(j).getString("disease_name");
+                                                    temp = jsonArray.getJSONObject(j).getString("spray_description");
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                if(!(lastInsertedValue.equals(temp)) && diseaseName.equals(text)){
+                                                    sprayDescriptionList.add(temp);
+                                                    lastInsertedValue = temp;
+                                                }
+                                            }
+                                            recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+                                            recyclerView.setAdapter(new SprayInformationAdapter(sprayDescriptionList));
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                                    }
+                                });
                             }
 
                         }
