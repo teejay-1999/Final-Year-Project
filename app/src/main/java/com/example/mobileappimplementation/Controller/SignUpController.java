@@ -1,5 +1,6 @@
 package com.example.mobileappimplementation.Controller;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -8,10 +9,22 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import com.example.mobileappimplementation.Model.User;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.mobileappimplementation.MainActivity;
+import com.example.mobileappimplementation.Model.Customer;
 import com.example.mobileappimplementation.R;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class SignUpController extends AppCompatActivity {
@@ -23,6 +36,7 @@ public class SignUpController extends AppCompatActivity {
     }
 
     public void SignUp(View view) {
+        CommonVariables commonVariables = new CommonVariables();
         EditText inputFirstName = (EditText) findViewById(R.id.first_name);
         EditText inputLastName = (EditText) findViewById(R.id.last_name);
         EditText inputEmail = (EditText) findViewById(R.id.email);
@@ -34,7 +48,7 @@ public class SignUpController extends AppCompatActivity {
         boolean conditionTwo = isFieldEmpty(inputLastName) || !(areLetters(inputLastName.getText().toString()));
         boolean conditionThree = isFieldEmpty(inputEmail) || !(isCorrectEmailPattern(inputEmail.getText().toString()));
         boolean conditionFour = isFieldEmpty(inputPhoneNumber) || !(isElevenDigits(inputPhoneNumber.getText().toString()));
-        boolean conditionFive = isFieldEmpty(inputPassword) || !(isMoreThanSixLetters(inputPassword.getText().toString()));
+        boolean conditionFive = isFieldEmpty(inputPassword) || !(isMoreThanSixCharacters(inputPassword.getText().toString()));
         boolean conditionSix =  isFieldEmpty(inputConfirmPassword);
 
         if(!conditionOne && !conditionTwo && !conditionThree && !conditionFour && !conditionFive && !conditionSix){
@@ -45,9 +59,9 @@ public class SignUpController extends AppCompatActivity {
             String password = inputPassword.getText().toString();
             String confirmPassword = inputConfirmPassword.getText().toString();
             if(confirmPassword.equals(password)) {
-                User user = new User(firstName, lastName, email, phoneNumber, password);
-                user.insert(getApplicationContext());
-                toDashboard(user);
+                Customer customer = new Customer(firstName, lastName, email, phoneNumber, password);
+                insert(customer, commonVariables);
+                toDashboard(customer);
             }
             else{
                 inputConfirmPassword.setError("Password did not match");
@@ -117,21 +131,72 @@ public class SignUpController extends AppCompatActivity {
             return true;
         return false;
     }
-    public boolean isMoreThanSixLetters(String string){
+    public boolean isMoreThanSixCharacters(String string){
             return (string.length() >= 6);
         }
     public void toLogin(View view){
         startActivity(new Intent(getApplicationContext(),LogInController.class));
     }
-    public void toDashboard(User user){
+    public void toDashboard(Customer customer){
+        CommonVariables commonVariables = new CommonVariables();
         SharedPreferences preference = getSharedPreferences("USER_DATA", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preference.edit();
-        editor.putString("firstName",user.getFirstName());
-        editor.putString("lastName",user.getLastName());
-        editor.putString("email",user.getEmail());
-        editor.putString("phoneNumber",user.getPhoneNumber());
-        editor.putString("password",user.getPassword());
+        editor.putString("firstName", customer.getFirstName());
+        editor.putString("lastName", customer.getLastName());
+        editor.putString("email", customer.getEmail());
+        editor.putString("phoneNumber", customer.getPhoneNumber());
+        editor.putString("password", customer.getPassword());
         editor.commit();
-        startActivity(new Intent(getApplicationContext(), MainActivityController.class));
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
     }
+
+    public void insert(Customer customer, CommonVariables commonVariables){
+        commonVariables.setAPIName("sign_up.php");
+        String completeURL = commonVariables.getUrl() + commonVariables.getAPIName();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, completeURL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error.toString());
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }
+        ){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> mapObject = new HashMap<String, String>();
+                mapObject.put("firstName",customer.getFirstName());
+                mapObject.put("lastName", customer.getLastName());
+                mapObject.put("email", customer.getEmail());
+                mapObject.put("password", customer.getPassword());
+                mapObject.put("phoneNumber", customer.getPhoneNumber());
+                return mapObject;
+            }
+        };
+        stringRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(stringRequest);
+    }
+
+
 }

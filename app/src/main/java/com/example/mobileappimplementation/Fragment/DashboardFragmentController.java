@@ -1,7 +1,5 @@
 package com.example.mobileappimplementation.Fragment;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -15,10 +13,10 @@ import com.example.mobileappimplementation.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link DashboardFragment#newInstance} factory method to
+ * Use the {@link DashboardFragmentController#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DashboardFragment extends Fragment {
+public class DashboardFragmentController extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,12 +38,12 @@ public class DashboardFragment extends Fragment {
         this.firstName = firstName;
     }
 
-    public DashboardFragment() {
+    public DashboardFragmentController() {
     }
 
 
-    public static DashboardFragment newInstance(String param1, String param2) {
-        DashboardFragment fragment = new DashboardFragment();
+    public static DashboardFragmentController newInstance(String param1, String param2) {
+        DashboardFragmentController fragment = new DashboardFragmentController();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

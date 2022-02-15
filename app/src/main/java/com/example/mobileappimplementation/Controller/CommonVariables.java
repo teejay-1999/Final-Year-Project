@@ -1,4 +1,4 @@
-package com.example.mobileappimplementation.Model;
+package com.example.mobileappimplementation.Controller;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,18 +12,17 @@ import org.json.JSONArray;
 
 import java.io.StringReader;
 
-public abstract class AbstractModel {
+public class CommonVariables {
     private String url;
     private String APIName;
     protected JSONArray jsonArray;
-    protected ResponseListener listener;
-    public void insert(Context applicationContext){}
-    public void delete(){}
-    public void update(){}
-    public void retrieve(Context applicationContext){}
+    private ResponseListener listener;
 
+    public ResponseListener getListener() {
+        return listener;
+    }
 
-    public AbstractModel() {
+    public CommonVariables() {
 
         url = "http://192.168.18.239/api/";
         jsonArray = null;

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:context=".Adapter.CultivationGuidelineAdapter">
+    tools:context=".Adapter.AlertAdapter">
 
     <androidx.cardview.widget.CardView
         android:layout_width="380dp"
@@ -33,7 +33,7 @@
             android:text="TextView"
             android:textSize="15sp"
             android:translationX="0dp"
-            android:translationY="50dp"
+            android:translationY="40dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

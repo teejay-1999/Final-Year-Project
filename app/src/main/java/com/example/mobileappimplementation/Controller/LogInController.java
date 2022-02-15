@@ -1,5 +1,6 @@
 package com.example.mobileappimplementation.Controller;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -10,13 +11,23 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.mobileappimplementation.Model.User;
-import com.example.mobileappimplementation.ObjectListener.ResponseListener;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.mobileappimplementation.MainActivity;
+import com.example.mobileappimplementation.Model.Customer;
 import com.example.mobileappimplementation.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class LogInController extends AppCompatActivity {
@@ -27,7 +38,7 @@ public class LogInController extends AppCompatActivity {
         SharedPreferences preference = getSharedPreferences("USER_DATA", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preference.edit();
         if(preference.contains("email")){
-            startActivity(new Intent(getApplicationContext(), MainActivityController.class));
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
         setContentView(R.layout.log_in);
 
@@ -38,35 +49,19 @@ public class LogInController extends AppCompatActivity {
     }
 
     public void Login(View view) {
-        User user = null;
+        CommonVariables commonVariables = new CommonVariables();
+        Customer customer = null;
         EditText inputEmail = (EditText) findViewById(R.id.email);
         EditText inputPassword = (EditText) findViewById(R.id.password);
         boolean conditionOne = isFieldEmpty(inputEmail) || !(isCorrectEmailPattern(inputEmail.getText().toString()));
-        boolean conditionTwo = isFieldEmpty(inputPassword) || !(isMoreThanSixLetters(inputPassword.getText().toString()));
+        boolean conditionTwo = isFieldEmpty(inputPassword) || !(isMoreThanSixCharacters(inputPassword.getText().toString()));
         if(!conditionOne && !conditionTwo){
             String email = inputEmail.getText().toString();
             String password = inputPassword.getText().toString();
-            user = new User(email, password);
-            user.ifUserExist(getApplicationContext());
-            user.setListener(new ResponseListener() {
-                @Override
-                public void onResult(String result) {
-                    if(result.equals("User Not Found") || result.equals("Credentials Did not Match")) {
-                    Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        try {
-                            JSONArray jsonArray = new JSONArray(result);
-                            toDashboard(jsonArray);
-                        }
-                        catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    inputEmail.getText().clear();
-                    inputPassword.getText().clear();
-                }
-            });
+            customer = new Customer(email, password);
+            ifUserExist(customer, commonVariables);
+            inputEmail.getText().clear();
+            inputPassword.getText().clear();
         }
         else{
             if (conditionOne){
@@ -74,7 +69,7 @@ public class LogInController extends AppCompatActivity {
                 if(conditionOne)
                     inputEmail.setError("This field is required");
                 else
-                    inputEmail.setError("Email should be of the format user@domain.com");
+                    inputEmail.setError("Email should be of the format customer@domain.com");
             }
             if (conditionTwo){
                 conditionTwo = isFieldEmpty(inputPassword);
@@ -92,7 +87,7 @@ public class LogInController extends AppCompatActivity {
         Pattern pattern = Pattern.compile(regularExpression);
         return pattern.matcher(string).matches();
     }
-    public boolean isMoreThanSixLetters(String string){
+    public boolean isMoreThanSixCharacters(String string){
 
         return (string.length() >= 6);
     }
@@ -111,6 +106,63 @@ public class LogInController extends AppCompatActivity {
         editor.putString("phoneNumber",jsonArray.getJSONObject(0).getString("phone_number"));
         editor.putString("password",jsonArray.getJSONObject(0).getString("password"));
         editor.commit();
-        startActivity(new Intent(getApplicationContext(), MainActivityController.class));
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
     }
+    public void ifUserExist(Customer customer, CommonVariables commonVariables){
+        commonVariables.setAPIName("log_in.php");
+        String completeURL = commonVariables.getUrl() + commonVariables.getAPIName();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, completeURL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if(response.equals("Customer Not Found") || response.equals("Credentials Did not Match")) {
+                    Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    try {
+                        JSONArray jsonArray = new JSONArray(response);
+                        toDashboard(jsonArray);
+                    }
+                    catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error.toString());
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }
+        ){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> mapObject = new HashMap<String, String>();
+                mapObject.put("email", customer.getEmail());
+                mapObject.put("password", customer.getPassword());
+                return mapObject;
+            }
+        };
+        stringRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(stringRequest);
+    }
+
+
 }

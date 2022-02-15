@@ -10,6 +10,8 @@
         android:title="Spray Information"/>
     <item android:id="@+id/community_guideline"
         android:title="Community Guidelines"/>
+    <item android:id="@+id/drone_order"
+        android:title="Drone Order"/>
     <item android:id="@+id/log_out"
         android:title="Log Out"/>
 
