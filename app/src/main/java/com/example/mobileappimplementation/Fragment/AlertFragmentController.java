@@ -20,7 +20,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mobileappimplementation.Adapter.AlertAdapter;
-import com.example.mobileappimplementation.Controller.CommonVariables;
+import com.example.mobileappimplementation.Controller.APIDetails;
 import com.example.mobileappimplementation.R;
 
 import org.json.JSONArray;
@@ -81,12 +81,12 @@ public class AlertFragmentController extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        CommonVariables commonVariables = new CommonVariables();
+        APIDetails commonVariables = new APIDetails();
         View view = inflater.inflate(R.layout.alert, container, false);
         retrieve(view, commonVariables);
         return view;
     }
-    public void retrieve(View view, CommonVariables commonVariables){
+    public void retrieve(View view, APIDetails commonVariables){
         commonVariables.setAPIName("alert_data.php");
         String completeURL = commonVariables.getUrl() + commonVariables.getAPIName();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, completeURL, new Response.Listener<String>() {

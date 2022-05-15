@@ -1,8 +1,8 @@
 package com.example.mobileappimplementation.Model;
 
-import com.example.mobileappimplementation.Controller.CommonVariables;
+import com.example.mobileappimplementation.Controller.APIDetails;
 
-public class Drone extends CommonVariables {
+public class Drone extends APIDetails {
     private int id;
     private int price;
     private String heading;

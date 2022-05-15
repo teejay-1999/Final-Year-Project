@@ -1,5 +1,6 @@
 package com.example.mobileappimplementation;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,18 +13,17 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.mobileappimplementation.Controller.CultivationGuidelineController;
 import com.example.mobileappimplementation.Controller.LogInController;
 import com.example.mobileappimplementation.Controller.OrderPlacementController;
+import com.example.mobileappimplementation.Handler.WeatherAPIHandler;
 import com.example.mobileappimplementation.Fragment.AlertFragmentController;
-import com.example.mobileappimplementation.Fragment.DashboardFragmentController;
+import com.example.mobileappimplementation.Fragment.DashboardFragment;
 import com.example.mobileappimplementation.Fragment.OrderFragmentController;
 import com.example.mobileappimplementation.Fragment.SprayInformationFragmentController;
-import com.example.mobileappimplementation.R;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,9 +44,8 @@ public class MainActivity extends AppCompatActivity {
         actionBarDrawerToggle.syncState();
         SharedPreferences preference = getSharedPreferences("USER_DATA", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preference.edit();
-        TextView nameText = (TextView) findViewById(R.id.nameText);
         String firstName = preference.getString("firstName","0");
-        DashboardFragmentController initialFragment = new DashboardFragmentController();
+        DashboardFragment initialFragment = new DashboardFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.container,initialFragment).commit();
         initialFragment.setFirstName(firstName);
         navigationView.setCheckedItem(R.id.home);
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.home:
-                        DashboardFragmentController temp = new DashboardFragmentController();
+                        DashboardFragment temp = new DashboardFragment();
                         navigationView.setCheckedItem(R.id.home);
                         temp.setFirstName(firstName);
                         getSupportFragmentManager().beginTransaction().replace(R.id.container,temp).commit();
@@ -79,10 +78,6 @@ public class MainActivity extends AppCompatActivity {
                         navigationView.setCheckedItem(R.id.spray_information);
                         SprayInformationFragmentController sprayInformationFragmentController = new SprayInformationFragmentController();
                         getSupportFragmentManager().beginTransaction().replace(R.id.container, sprayInformationFragmentController).commit();
-
-
-
-
                 }
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return true;
@@ -90,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
 
     @Override
     public void onBackPressed() {
@@ -101,8 +97,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void toDroneSelection(View view) {
-        startActivity(new Intent(getApplicationContext(), OrderPlacementController.class));
 
+
+    public void updateCurrentWeatherForecast(View view) {
+        WeatherAPIHandler weatherAPIHandler = new WeatherAPIHandler();
+        weatherAPIHandler.getCurrentWeatherInfo("Lahore", this.findViewById(R.id.dashboard));
+    }
+
+
+    public void toPlaceOrderPage(View view) {
+        startActivity(new Intent(getApplicationContext(),OrderPlacementController.class));
     }
 }

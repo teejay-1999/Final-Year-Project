@@ -1,8 +1,8 @@
 package com.example.mobileappimplementation.Model;
 
-import com.example.mobileappimplementation.Controller.CommonVariables;
+import com.example.mobileappimplementation.Controller.APIDetails;
 
-public class Alert extends CommonVariables {
+public class Alert extends APIDetails {
     private String heading,description;
 
     public Alert() {

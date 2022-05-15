@@ -19,7 +19,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mobileappimplementation.Adapter.CultivationGuidelineAdapter;
 import com.example.mobileappimplementation.MainActivity;
-import com.example.mobileappimplementation.Model.CultivationGuideline;
 import com.example.mobileappimplementation.R;
 
 import org.json.JSONArray;
@@ -41,7 +40,7 @@ public class CultivationGuidelineController extends AppCompatActivity {
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
     }
     public void displayGuidelines(){
-        CommonVariables commonVariables = new CommonVariables();
+        APIDetails commonVariables = new APIDetails();
         retrieve(commonVariables);
 
     }
@@ -50,9 +49,9 @@ public class CultivationGuidelineController extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new CultivationGuidelineAdapter(jsonArray));
     }
-    public void retrieve(CommonVariables commonVariables){
-        commonVariables.setAPIName("cultivation_guideline_data.php");
-        String completeURL = commonVariables.getUrl() + commonVariables.getAPIName();
+    public void retrieve(APIDetails apiDetails){
+        apiDetails.setAPIName("cultivation_guideline_data.php");
+        String completeURL = apiDetails.getUrl() + apiDetails.getAPIName();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, completeURL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

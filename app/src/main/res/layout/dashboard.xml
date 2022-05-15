@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dashboard"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
@@ -55,6 +56,60 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.244">
 
+        <TextView
+            android:id="@+id/city_name2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:fontFamily="sans-serif-black"
+            android:textSize="20sp"
+            android:translationX="0dp"
+            android:translationY="10dp"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/day2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:fontFamily="sans-serif-black"
+            android:textSize="16sp"
+            android:translationX="0dp"
+            android:translationY="60dp"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/temperature2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:fontFamily="sans-serif-black"
+            android:textSize="20sp"
+            android:translationX="200dp"
+            android:translationY="80dp"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/forecast_image2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:translationX="240dp"
+            android:translationY="15dp" />
+
+        <ImageButton
+            android:id="@+id/refresh_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:onClick="updateCurrentWeatherForecast"
+            android:src="@drawable/ic_baseline_refresh_24"
+            android:text="Button"
+            android:textSize="8sp"
+            android:translationX="330dp"
+            android:translationY="10dp" />
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
@@ -114,7 +169,7 @@
         app:layout_constraintHorizontal_bias="0.656"
         app:layout_constraintStart_toEndOf="@+id/drone_inspection"
         app:layout_constraintTop_toBottomOf="@+id/weather_updates"
-        app:layout_constraintVertical_bias="0.103" >
+        app:layout_constraintVertical_bias="0.103">
 
         <ImageView
             android:layout_width="71dp"

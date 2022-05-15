@@ -22,6 +22,10 @@ import com.android.volley.toolbox.Volley;
 import com.example.mobileappimplementation.MainActivity;
 import com.example.mobileappimplementation.Model.Customer;
 import com.example.mobileappimplementation.R;
+import com.google.gson.JsonArray;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +40,7 @@ public class SignUpController extends AppCompatActivity {
     }
 
     public void SignUp(View view) {
-        CommonVariables commonVariables = new CommonVariables();
+        APIDetails commonVariables = new APIDetails();
         EditText inputFirstName = (EditText) findViewById(R.id.first_name);
         EditText inputLastName = (EditText) findViewById(R.id.last_name);
         EditText inputEmail = (EditText) findViewById(R.id.email);
@@ -92,7 +96,7 @@ public class SignUpController extends AppCompatActivity {
                 if(conditionTwo)
                     inputLastName.setError("This field is required");
                 else
-                    inputLastName.setError("First Name should only be letters");
+                    inputLastName.setError("Last Name should only be letters");
             }
             if (conditionThree){
                 conditionThree = isFieldEmpty(inputEmail);
@@ -115,6 +119,12 @@ public class SignUpController extends AppCompatActivity {
         if(string.matches("[a-zA-Z]+"))
             return true;
         return false;
+//        int length = string.length();
+//        for(int i = 0, j = length - 1; j < i; i++, j--){
+//            if(!(Character.isLetter(string.charAt(i))) || !(Character.isLetter(string.charAt(j))))
+//                return false;
+//        }
+//        return true;
     }
     public boolean isFieldEmpty(EditText editText){
         if(editText.getText().toString().equals(""))
@@ -138,7 +148,6 @@ public class SignUpController extends AppCompatActivity {
         startActivity(new Intent(getApplicationContext(),LogInController.class));
     }
     public void toDashboard(Customer customer){
-        CommonVariables commonVariables = new CommonVariables();
         SharedPreferences preference = getSharedPreferences("USER_DATA", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preference.edit();
         editor.putString("firstName", customer.getFirstName());
@@ -147,12 +156,13 @@ public class SignUpController extends AppCompatActivity {
         editor.putString("phoneNumber", customer.getPhoneNumber());
         editor.putString("password", customer.getPassword());
         editor.commit();
+        retrieveCustomerId(customer.getEmail());
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
     }
 
-    public void insert(Customer customer, CommonVariables commonVariables){
-        commonVariables.setAPIName("sign_up.php");
-        String completeURL = commonVariables.getUrl() + commonVariables.getAPIName();
+    public void insert(Customer customer, APIDetails apiDetails){
+        apiDetails.setAPIName("sign_up.php");
+        String completeURL = apiDetails.getUrl() + apiDetails.getAPIName();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, completeURL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -175,6 +185,60 @@ public class SignUpController extends AppCompatActivity {
                 mapObject.put("email", customer.getEmail());
                 mapObject.put("password", customer.getPassword());
                 mapObject.put("phoneNumber", customer.getPhoneNumber());
+                return mapObject;
+            }
+        };
+        stringRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(stringRequest);
+    }
+
+    public void retrieveCustomerId(String email){
+        APIDetails apiDetails = new APIDetails();
+        apiDetails.setAPIName("customer_id.php");
+        String completeURL = apiDetails.getUrl() + apiDetails.getAPIName();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, completeURL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONArray jsonArray = new JSONArray(response);
+                    SharedPreferences preference = getSharedPreferences("USER_DATA", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preference.edit();
+                    editor.putInt("id", jsonArray.getJSONObject(0).getInt("id"));
+                    System.out.println(jsonArray.getJSONObject(0).getInt("id"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error.toString());
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }
+        ){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> mapObject = new HashMap<String, String>();
+                mapObject.put("email", email);
                 return mapObject;
             }
         };

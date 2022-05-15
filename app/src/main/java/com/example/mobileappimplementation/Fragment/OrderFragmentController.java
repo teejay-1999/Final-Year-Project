@@ -1,11 +1,15 @@
 package com.example.mobileappimplementation.Fragment;
 
+import static java.sql.Types.NULL;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +24,13 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.mobileappimplementation.Controller.CommonVariables;
+import com.example.mobileappimplementation.Adapter.AlertAdapter;
+import com.example.mobileappimplementation.Adapter.OrderAdapter;
+import com.example.mobileappimplementation.Controller.APIDetails;
 import com.example.mobileappimplementation.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -77,25 +86,36 @@ public class OrderFragmentController extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        CommonVariables commonVariables = new CommonVariables();
+        APIDetails commonVariables = new APIDetails();
         View view = inflater.inflate(R.layout.order, container, false);
         retrieve(view, commonVariables);
 
         //System.out.print(noOrderTextMessage);
         return view;
     }
-    public void retrieve(View view, CommonVariables commonVariables) {
+    public void retrieve(View view, APIDetails commonVariables) {
         commonVariables.setAPIName("order_data.php");
         String completeURL = commonVariables.getUrl() + commonVariables.getAPIName();
         SharedPreferences preference = view.getContext().getSharedPreferences("USER_DATA", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preference.edit();
-        String email = preference.getString("email","0");
+        Integer temp = preference.getInt("id", NULL);
+        String id = temp.toString();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, completeURL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 if(response.equals("You have not placed any order yet!")) {
                     TextView textView = (TextView) view.findViewById(R.id.no_order_text);
                     textView.setText(response);
+                }
+                else{
+                    try {
+                        JSONArray jsonArray = new JSONArray(response);
+                        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewOrder);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+                        recyclerView.setAdapter(new OrderAdapter(jsonArray));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }, new Response.ErrorListener() {
@@ -108,7 +128,7 @@ public class OrderFragmentController extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> mapObject = new HashMap<String, String>();
-                mapObject.put("email", email);
+                mapObject.put("id", id);
                 return mapObject;
             }
         };

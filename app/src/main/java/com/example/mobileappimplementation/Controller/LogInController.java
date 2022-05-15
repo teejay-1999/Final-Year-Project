@@ -49,7 +49,7 @@ public class LogInController extends AppCompatActivity {
     }
 
     public void Login(View view) {
-        CommonVariables commonVariables = new CommonVariables();
+        APIDetails commonVariables = new APIDetails();
         Customer customer = null;
         EditText inputEmail = (EditText) findViewById(R.id.email);
         EditText inputPassword = (EditText) findViewById(R.id.password);
@@ -100,17 +100,18 @@ public class LogInController extends AppCompatActivity {
     public void toDashboard(JSONArray jsonArray) throws JSONException {
         SharedPreferences preference = getSharedPreferences("USER_DATA",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preference.edit();
-        editor.putString("firstName",jsonArray.getJSONObject(0).getString("first_name"));
-        editor.putString("lastName",jsonArray.getJSONObject(0).getString("last_name"));
+        editor.putString("firstName",jsonArray.getJSONObject(0).getString("firstName"));
+        editor.putString("lastName",jsonArray.getJSONObject(0).getString("lastName"));
         editor.putString("email",jsonArray.getJSONObject(0).getString("email"));
-        editor.putString("phoneNumber",jsonArray.getJSONObject(0).getString("phone_number"));
+        editor.putString("phoneNumber",jsonArray.getJSONObject(0).getString("phoneNumber"));
         editor.putString("password",jsonArray.getJSONObject(0).getString("password"));
+        editor.putInt("id", jsonArray.getJSONObject(0).getInt("id"));
         editor.commit();
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
     }
-    public void ifUserExist(Customer customer, CommonVariables commonVariables){
-        commonVariables.setAPIName("log_in.php");
-        String completeURL = commonVariables.getUrl() + commonVariables.getAPIName();
+    public void ifUserExist(Customer customer, APIDetails apiDetails){
+        apiDetails.setAPIName("log_in.php");
+        String completeURL = apiDetails.getUrl() + apiDetails.getAPIName();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, completeURL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

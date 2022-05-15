@@ -17,6 +17,7 @@
         android:fontFamily="sans-serif-black"
         android:text="Spray Information"
         android:textSize="24sp"
+        android:translationX="20dp"
         android:translationY="80dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.12"

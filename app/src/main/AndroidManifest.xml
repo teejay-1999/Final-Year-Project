@@ -4,7 +4,8 @@
     package="com.example.mobileappimplementation">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,9 +16,6 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
             android:name=".Controller.OrderPlacementController"
-            android:exported="false" />
-        <activity
-            android:name=".Adapter.CultivationGuidelineAdapter"
             android:exported="false" />
         <activity
             android:name=".Controller.CultivationGuidelineController"

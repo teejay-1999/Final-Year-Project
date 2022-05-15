@@ -22,15 +22,13 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.mobileappimplementation.Adapter.AlertAdapter;
 import com.example.mobileappimplementation.Adapter.SprayInformationAdapter;
-import com.example.mobileappimplementation.Controller.CommonVariables;
+import com.example.mobileappimplementation.Controller.APIDetails;
 import com.example.mobileappimplementation.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -85,12 +83,12 @@ public class SprayInformationFragmentController extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        CommonVariables commonVariables = new CommonVariables();
+        APIDetails commonVariables = new APIDetails();
         View view = inflater.inflate(R.layout.spray_information, container, false);
         retrieve(view,commonVariables);
         return view;
     }
-    public void retrieve(View view, CommonVariables commonVariables){
+    public void retrieve(View view, APIDetails commonVariables){
         commonVariables.setAPIName("spray_information_data.php");
         String completeURL = commonVariables.getUrl() + commonVariables.getAPIName();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, completeURL, new Response.Listener<String>() {
@@ -108,7 +106,7 @@ public class SprayInformationFragmentController extends Fragment {
                     diseaseList.add("Disease Name");
                     String lastInsertedValue = "0";
                     for(int i = 0; i < jsonArray.length(); i++){
-                        String temp = jsonArray.getJSONObject(i).getString("crop_name");
+                        String temp = jsonArray.getJSONObject(i).getString("cropName");
                         if(!(lastInsertedValue.equals(temp))){
                             cropList.add(temp);
                             lastInsertedValue = temp;
@@ -131,8 +129,8 @@ public class SprayInformationFragmentController extends Fragment {
                                     String temp = null;
                                     String cropName = null;
                                     try {
-                                        cropName = jsonArray.getJSONObject(j).getString("crop_name");
-                                        temp = jsonArray.getJSONObject(j).getString("disease_name");
+                                        cropName = jsonArray.getJSONObject(j).getString("cropName");
+                                        temp = jsonArray.getJSONObject(j).getString("diseaseName");
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
@@ -154,8 +152,8 @@ public class SprayInformationFragmentController extends Fragment {
                                                 String temp = null;
                                                 String diseaseName = null;
                                                 try {
-                                                    diseaseName = jsonArray.getJSONObject(j).getString("disease_name");
-                                                    temp = jsonArray.getJSONObject(j).getString("spray_description");
+                                                    diseaseName = jsonArray.getJSONObject(j).getString("diseaseName");
+                                                    temp = jsonArray.getJSONObject(j).getString("sprayDescription");
                                                 } catch (JSONException e) {
                                                     e.printStackTrace();
                                                 }
