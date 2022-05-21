@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Controller.OrderVerificationController">
+    <Button
+        android:id="@+id/to_order_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/no_border"
+        android:drawableStart="@drawable/ic_baseline_arrow_back"
+        android:drawablePadding="10dp"
+        android:onClick="toOrderPage"
+        android:text="Return Back to Orders Page"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/entered_address"
+        android:layout_width="350dp"
+        android:textColor="@color/black"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="128dp"
+        android:layout_marginTop="68dp"
+        android:ems="10"
+        android:padding="10dp"
+        android:textSize="18sp"
+        android:fontFamily="sans-serif-black"
+        android:translationX="-45dp"
+        android:translationY="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/chosen_drone_option"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/entered_quantity" />
+
+    <TextView
+        android:id="@+id/entered_quantity"
+        android:layout_width="350dp"
+        android:textColor="@color/black"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="128dp"
+        android:layout_marginTop="52dp"
+        android:ems="10"
+        android:fontFamily="sans-serif-black"
+        android:padding="10dp"
+        android:textSize="18sp"
+        android:translationX="-46dp"
+        android:translationY="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/chosen_drone_option"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chosen_drone_option" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/hidden_address"
+        tools:ignore="MissingConstraints" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/hidden_quantity"
+        tools:ignore="MissingConstraints" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/hidden_drone_option"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/to_order_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="252dp"
+        android:layout_marginTop="168dp"
+        android:background="@drawable/no_border"
+        android:drawableStart="@drawable/ic_baseline_arrow_back"
+        android:drawablePadding="10dp"
+        android:onClick="toOrderDetailPage"
+        android:text="Back"
+        android:translationY="-30dp"
+        android:translationX="-230dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/entered_address" />
+
+    <Button
+        android:id="@+id/to_confirmation_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="252dp"
+        android:layout_marginTop="168dp"
+        android:background="@drawable/no_border"
+        android:drawableEnd="@drawable/ic_baseline_arrow_forward_24"
+        android:drawablePadding="10dp"
+        android:onClick="toOrderVerificationPage"
+        android:text="Place Order"
+        android:translationY="-30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/entered_address" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="320dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="56dp"
+        android:fontFamily="sans-serif-black"
+        android:text="Step 2: Verify Order Details"
+        android:textSize="24sp"
+        android:translationX="5dp"
+        android:translationY="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/chosen_drone_option"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.175"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/chosen_drone_option"
+        android:layout_width="350dp"
+        android:textColor="@color/black"
+        android:layout_height="wrap_content"
+        android:transformPivotX="20dp"
+        android:fontFamily="sans-serif-black"
+        android:textSize="18sp"
+        android:translationX="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.179"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.294" />
+</androidx.constraintlayout.widget.ConstraintLayout>

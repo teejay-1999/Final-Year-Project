@@ -180,26 +180,6 @@ public class DashboardFragment extends Fragment implements LocationListener {
         }
     }
 
-    private void showAlertMessageForDisabledLocation() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage("Aerial Inspector would want to access your location");
-        builder.setCancelable(false);
-        builder.setPositiveButton("Allow Access", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-            }
-        });
-        builder.setNegativeButton("Deny Access", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
     @Override
     public void onLocationChanged(@NonNull Location location) {
         try{

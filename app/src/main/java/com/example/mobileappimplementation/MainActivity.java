@@ -1,6 +1,5 @@
 package com.example.mobileappimplementation;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +17,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.mobileappimplementation.Controller.CultivationGuidelineController;
 import com.example.mobileappimplementation.Controller.LogInController;
-import com.example.mobileappimplementation.Controller.OrderPlacementController;
+import com.example.mobileappimplementation.Controller.OrderDetailController;
 import com.example.mobileappimplementation.Handler.WeatherAPIHandler;
 import com.example.mobileappimplementation.Fragment.AlertFragmentController;
 import com.example.mobileappimplementation.Fragment.DashboardFragment;
@@ -45,19 +44,30 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preference = getSharedPreferences("USER_DATA", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preference.edit();
         String firstName = preference.getString("firstName","0");
-        DashboardFragment initialFragment = new DashboardFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.container,initialFragment).commit();
-        initialFragment.setFirstName(firstName);
-        navigationView.setCheckedItem(R.id.home);
+        //if the user clicks on return to orders page while verifying order details//
+        boolean check = preference.getBoolean("orderCheck",false);
+        if(check) {
+            preference.edit().remove("orderCheck").commit();
+            navigationView.setCheckedItem(R.id.drone_order);
+            OrderFragmentController orderFragmentController = new OrderFragmentController();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, orderFragmentController).commit();
+        }
+        //code snippet ends//
+        else {
+            DashboardFragment initialFragment = new DashboardFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, initialFragment).commit();
+            initialFragment.setFirstName(firstName);
+            navigationView.setCheckedItem(R.id.home);
+        }
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.home:
                         DashboardFragment temp = new DashboardFragment();
                         navigationView.setCheckedItem(R.id.home);
                         temp.setFirstName(firstName);
-                        getSupportFragmentManager().beginTransaction().replace(R.id.container,temp).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container, temp).commit();
                         break;
                     case R.id.log_out:
                         startActivity(new Intent(getApplicationContext(), LogInController.class));
@@ -97,15 +107,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     public void updateCurrentWeatherForecast(View view) {
         WeatherAPIHandler weatherAPIHandler = new WeatherAPIHandler();
         weatherAPIHandler.getCurrentWeatherInfo("Lahore", this.findViewById(R.id.dashboard));
     }
 
-
     public void toPlaceOrderPage(View view) {
-        startActivity(new Intent(getApplicationContext(),OrderPlacementController.class));
+        startActivity(new Intent(getApplicationContext(), OrderDetailController.class));
     }
 }

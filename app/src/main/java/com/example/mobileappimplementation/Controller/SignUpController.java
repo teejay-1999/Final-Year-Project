@@ -119,12 +119,6 @@ public class SignUpController extends AppCompatActivity {
         if(string.matches("[a-zA-Z]+"))
             return true;
         return false;
-//        int length = string.length();
-//        for(int i = 0, j = length - 1; j < i; i++, j--){
-//            if(!(Character.isLetter(string.charAt(i))) || !(Character.isLetter(string.charAt(j))))
-//                return false;
-//        }
-//        return true;
     }
     public boolean isFieldEmpty(EditText editText){
         if(editText.getText().toString().equals(""))
