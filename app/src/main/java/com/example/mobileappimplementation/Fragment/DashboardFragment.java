@@ -17,6 +17,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -28,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.mobileappimplementation.Handler.WeatherAPIHandler;
+import com.example.mobileappimplementation.Model.Weather;
 import com.example.mobileappimplementation.R;
 
 
@@ -42,7 +44,7 @@ import java.util.Locale;
  * Use the {@link DashboardFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DashboardFragment extends Fragment implements LocationListener {
+public class DashboardFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -97,30 +99,8 @@ public class DashboardFragment extends Fragment implements LocationListener {
         View view = inflater.inflate(R.layout.dashboard, container, false);
         TextView nameText = (TextView) view.findViewById(R.id.nameText);
         nameText.setText("Welcome " + firstName);
-        grantPermission();
         checkIfLocationIsEnabled();
-        getLocation();
-//        LocationManager locationManager = (LocationManager) view.getContext().getSystemService(Context.LOCATION_SERVICE);
-//
-//        if (!(ActivityCompat.checkSelfPermission(view.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-//                && ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-//            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
-//        boolean GPSEnabled = false;
-//        boolean networkEnabled = false;
-//        try {
-//            GPSEnabled = locationManager.isProviderEnabled((LocationManager.GPS_PROVIDER));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        try {
-//            networkEnabled = locationManager.isProviderEnabled((LocationManager.NETWORK_PROVIDER));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        if (!GPSEnabled && !networkEnabled) {
-//            showAlertMessageForDisabledLocation();
-//        }
-//        getLocation(view);
+
         return view;
 
     }
@@ -171,52 +151,6 @@ public class DashboardFragment extends Fragment implements LocationListener {
         }
     }
 
-    private void grantPermission(){
-        boolean conditionOne = ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
-        boolean conditionTwo = ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(),Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED;
-        String [] stringArray = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-        if(conditionOne && conditionTwo){
-            ActivityCompat.requestPermissions(getActivity(),stringArray,100);
-        }
-    }
 
-    @Override
-    public void onLocationChanged(@NonNull Location location) {
-        try{
-            Geocoder geocoder = new Geocoder(getActivity().getApplicationContext(),Locale.getDefault());
-            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
-            WeatherAPIHandler weatherAPIHandler = new WeatherAPIHandler();
-//            weatherAPIHandler.getCurrentWeatherInfo(addresses.get(0).getCountryName(),getView());
-            weatherAPIHandler.getCurrentWeatherInfo("Lahore", getView());
-//            System.out.println(addresses.get(0).getCountryName());
-        }catch(IOException e){
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onLocationChanged(@NonNull List<Location> locations) {
-
-    }
-
-    @Override
-    public void onFlushComplete(int requestCode) {
-
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(@NonNull String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(@NonNull String provider) {
-
-    }
 
 }

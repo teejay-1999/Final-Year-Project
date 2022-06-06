@@ -6,7 +6,6 @@ import java.sql.Date;
 public class Order {
     private Date date;
     private String status;
-    private Timestamp createdAt;
     private OrderDetail orderDetail;
     private Customer customer;
 
@@ -16,8 +15,6 @@ public class Order {
         this.orderDetail = orderDetail;
         this.customer = customer;
         Long currentDate = System.currentTimeMillis();
-        createdAt =  new Timestamp(currentDate);
-        System.out.println(createdAt);
         status = "pending";
     }
 
@@ -45,13 +42,6 @@ public class Order {
         this.orderDetail = orderDetail;
     }
 
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
 
     public Customer getCustomer() {
         return customer;

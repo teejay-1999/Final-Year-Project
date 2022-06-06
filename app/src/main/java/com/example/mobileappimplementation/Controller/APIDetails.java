@@ -9,7 +9,8 @@ public class APIDetails {
 
     public APIDetails() {
 
-        url = "http://192.168.18.239/api/";
+//        url = "http://192.168.18.239/api/";
+        url = "https://aerialinspector.000webhostapp.com/api/";
     }
 
     public String getUrl() {

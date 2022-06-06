@@ -13,11 +13,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
-        android:onClick="toPlaceOrderPage"
+        android:onClick="toDroneSelectionPage"
         android:text="Place Another Order >"
         android:textColor="@color/dark_green"
         android:textSize="17sp"
-        android:translationX="230sp"
+        android:translationX="180sp"
         android:translationY="80dp" />
 
     <TextView
@@ -28,7 +28,7 @@
         android:fontFamily="sans-serif-black"
         android:text="Your Orders"
         android:textSize="24sp"
-        android:translationX="-160dp"
+        android:translationX="-170dp"
         android:translationY="80dp" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -36,7 +36,7 @@
         android:layout_width="411dp"
         android:layout_height="599dp"
         android:layout_marginTop="48dp"
-        android:translationX="-630dp"
+        android:translationX="-650dp"
         android:translationY="80dp"
         app:layout_constraintVertical_bias="0.0" />
 
@@ -45,7 +45,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:translationY="100dp"
+        android:translationX="100dp"
+        android:translationY="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

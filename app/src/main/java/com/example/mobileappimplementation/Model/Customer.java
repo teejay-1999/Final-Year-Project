@@ -8,6 +8,7 @@ public class Customer {
     private String password;
     private String location;
     private String address;
+    private int id;
 
     public Customer() {
     }
@@ -83,5 +84,11 @@ public class Customer {
         this.address = address;
     }
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 }

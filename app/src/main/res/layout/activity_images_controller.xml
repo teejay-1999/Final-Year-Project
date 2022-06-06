@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Controller.ImagesController">
+
+    <ImageView
+        android:id="@+id/healthy_1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="72dp"
+        android:translationX="-70dp"
+        android:onClick="showHealthyMessage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.408"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/healthy_1_" />
+
+    <ImageView
+        android:id="@+id/healthy_2"
+        android:layout_width="100dp"
+        android:onClick="showHealthyMessage"
+        android:layout_height="100dp"
+        android:layout_marginTop="228dp"
+        android:translationX="-70dp"
+        android:translationY="-50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.411"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/healthy_1"
+        app:srcCompat="@drawable/healthy_2" />
+
+    <ImageView
+        android:id="@+id/rust_1"
+        android:layout_width="100dp"
+        android:onClick="showRustMessage"
+        android:layout_height="100dp"
+        android:layout_marginTop="72dp"
+        android:translationX="130dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.408"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/rust_1" />
+
+    <ImageView
+        android:id="@+id/rust_2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="228dp"
+        android:onClick="showRustMessage"
+        android:translationX="130dp"
+        android:translationY="-50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.411"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rust_1"
+        app:srcCompat="@drawable/rust_2" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -23,15 +23,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/crop_disease_heading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="56dp"
         android:fontFamily="sans-serif-black"
         android:text="Crop Disease Inspection"
         android:textSize="24sp"
-        android:translationX="-50dp"
-        android:translationY="240dp"
+        android:translationX="-40dp"
+        android:translationY="260dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
@@ -75,6 +74,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:fontFamily="sans-serif-black"
+            android:text="Click on the refresh button to get location's weather update"
             android:textSize="16sp"
             android:translationX="0dp"
             android:translationY="60dp"
@@ -87,17 +87,41 @@
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:fontFamily="sans-serif-black"
-            android:textSize="20sp"
-            android:translationX="200dp"
-            android:translationY="80dp"
+            android:textSize="15sp"
+            android:translationX="240dp"
+            android:translationY="90dp"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/condition_text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:fontFamily="sans-serif-black"
+            android:textSize="15dp"
+            android:translationX="245dp"
+            android:translationY="70dp"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/drone_inspection_message2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:fontFamily="sans-serif-black"
+            android:textSize="18dp"
+            android:translationX="20dp"
+            android:translationY="115dp"
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
             android:id="@+id/forecast_image2"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:translationX="240dp"
-            android:translationY="15dp" />
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:translationX="250dp"
+            android:translationY="10dp" />
 
         <ImageButton
             android:id="@+id/refresh_button"
@@ -151,6 +175,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
+        android:onClick="captureImage"
         android:id="@+id/phone_inspection"
         android:layout_width="159dp"
         android:layout_height="128dp"

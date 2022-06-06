@@ -1,8 +1,13 @@
 package com.example.mobileappimplementation.Controller;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -11,10 +16,31 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.mobileappimplementation.MainActivity;
+import com.example.mobileappimplementation.Model.Customer;
+import com.example.mobileappimplementation.Model.Order;
+import com.example.mobileappimplementation.Model.OrderDetail;
 import com.example.mobileappimplementation.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class OrderDetailController extends AppCompatActivity {
 
@@ -23,85 +49,28 @@ public class OrderDetailController extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.order_detail);
         Bundle caller = getIntent().getExtras();
-        Spinner droneOptionSpinner = (Spinner) findViewById(R.id.drone_option);
-        ArrayList<String> droneList = new ArrayList<String>();
-        droneList.add("Select Drone");
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,droneList);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        droneOptionSpinner.setAdapter(arrayAdapter);
-        droneList.add("DJI Tello with 2 batteries - Rs 35000");
-        droneOptionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectedOption = adapterView.getItemAtPosition(i).toString();
-                TextView hiddenText = (TextView) findViewById(R.id.selected_option);
-                hiddenText.setText(selectedOption);
-                TextView errorDroneOption = findViewById(R.id.error_drone_option);
-                if(!(errorDroneOption.toString().equals("Select Drone")))
-                    errorDroneOption.setText("");
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-        if(caller != null){
-            String droneOption = caller.getString("droneOption","0");
-            String quantity = caller.getString("quantity","0");
-            String address = caller.getString("address","0");
-            EditText QuantityInput = findViewById(R.id.quantity);
-            EditText AddressInput = findViewById(R.id.address);
-            QuantityInput.setText(quantity);
-            AddressInput.setText(address);
-            droneList = new ArrayList<String>();
-            droneList.add("DJI Tello with 2 batteries - Rs 35000");
-            arrayAdapter = new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,droneList);
-            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            droneOptionSpinner.setAdapter(arrayAdapter);
-            droneList.add("Select Drone");
-        }
+        String droneName = caller.getString("droneName");
+        String price = caller.getString("price");
+        TextView droneNameTextView = findViewById(R.id.drone_heading_detail);
+        TextView dronePriceTextView = findViewById(R.id.drone_price_detail);
+        droneNameTextView.setText("Drone Selected: " + droneName);
+        dronePriceTextView.setText("Price: Rs " + price);
     }
 
-    public void toOrderPage(View view) {
+    public void toDronePage(View view) {
         finish();
     }
 
 
-    public void toOrderVerificationPage(View view) {
-        EditText inputQuantity = (EditText) findViewById(R.id.quantity);
+    public void placeOrder(View view) {
         EditText inputAddress = (EditText)  findViewById(R.id.address);
-        TextView errorDroneOption = (TextView) findViewById(R.id.error_drone_option);
-        TextView errorQuantity = (TextView) findViewById(R.id.error_drone_quantity);
         TextView errorAddress = (TextView) findViewById(R.id.error_address);
         TextView errorAddressTwo = (TextView) findViewById(R.id.error_address_2);
-        TextView hiddenText = (TextView) findViewById(R.id.selected_option);
-        errorDroneOption.setTextColor(Color.parseColor("red"));
-        errorQuantity.setTextColor(Color.parseColor("red"));
         errorAddress.setTextColor(Color.parseColor("red"));
         errorAddressTwo.setTextColor(Color.parseColor("red"));
-        boolean verifyDroneOption = false, verifyQuantity = false, verifyAddress = false;
-        if(hiddenText.getText().toString().equals("Select Drone")){
-            errorDroneOption.setText("Please Select Drone.");
-            if(verifyDroneOption)
-                verifyDroneOption = false;
-        }
-        else {
-            errorDroneOption.setText("");
-            verifyDroneOption = true;
-        }
-        boolean conditionOne = isFieldEmpty(inputQuantity);  //check for quantity
-        boolean conditionTwo = isFieldEmpty(inputAddress); //check for address
-        if(conditionOne){
-            errorQuantity.setText("Quantity field cannot be empty.");
-            if(verifyQuantity)
-                verifyDroneOption = false;
-        }
-        else {
-            errorQuantity.setText("");
-            verifyQuantity = true;
-        }
-        if (conditionTwo){
+        boolean verifyAddress = false;
+        boolean conditionOne = isFieldEmpty(inputAddress); //check for address
+        if (conditionOne){
             errorAddressTwo.setText("");
             errorAddress.setText("Address field cannot be empty.");
             if(verifyAddress)
@@ -124,23 +93,50 @@ public class OrderDetailController extends AppCompatActivity {
             errorAddressTwo.setText("");
             verifyAddress = true;
         }
-        if(verifyDroneOption && verifyQuantity && verifyAddress){ //insertion part begins
-            String droneOption = hiddenText.getText().toString();
-            String quantity = inputQuantity.getText().toString();
+        if(verifyAddress){ //sending this to the verification page
             String address = inputAddress.getText().toString();
-            Intent goToOrderDetailVerification = new Intent();
-            goToOrderDetailVerification.setClass(this,OrderVerificationController.class);
-            goToOrderDetailVerification.putExtra("droneOption",droneOption);
-            goToOrderDetailVerification.putExtra("quantity",quantity);
-            goToOrderDetailVerification.putExtra("address",address);
-            startActivity(goToOrderDetailVerification);
+            Bundle caller = getIntent().getExtras();
+            String droneName = caller.getString("droneName");
+            String droneDescription = caller.getString("droneDescription");
+            String price = caller.getString("price");
+            String addressCheck = "Please verify your address before you proceed to place order \n" + "Address: " + inputAddress.getText().toString();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(addressCheck);
+            builder.setCancelable(false);
+            builder.setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Intent goToMainActivity = new Intent();
+                    goToMainActivity.setClass(getApplicationContext(), MainActivity.class);
+                    SharedPreferences preference = getSharedPreferences("USER_DATA", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preference.edit();
+                    editor.putBoolean("placeOrderCheck", true);
+                    editor.putInt("price", Integer.parseInt(price));
+                    editor.commit();
+                    Customer customer = new Customer();
+                    customer.setAddress(address);
+                    customer.setId(preference.getInt("id",0));
+                    String temp = droneName +"- " + droneDescription;
+                    System.out.print(temp);
+                    OrderDetail orderDetail = new OrderDetail(price, temp);
+                    long millis = System.currentTimeMillis();
+                    Date date = new Date(millis);
+                    Order order = new Order(date,orderDetail,customer);
+                    APIDetails apiDetails = new APIDetails();
+                    insert(order, apiDetails);
+                    startActivity(goToMainActivity);
+                }
+            });
+            builder.setNegativeButton("Change Address", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.cancel();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
             //**code snippet to be used somewhere else**//
-//            Customer customer = new Customer();
-//            customer.setAddress(address);
-//            OrderDetail orderDetail = new OrderDetail(quantity, address);
-//            long millis = System.currentTimeMillis();
-//            Date date = new Date(millis);
-//            Order order = new Order(date,orderDetail,customer);
+
         }
     }
 
@@ -175,5 +171,57 @@ public class OrderDetailController extends AppCompatActivity {
             return true;
         return false;
     }
+
+    public void insert(Order order, APIDetails apiDetails){
+        apiDetails.setAPIName("insert_order_details.php");
+        String completeURL = apiDetails.getUrl() + apiDetails.getAPIName();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, completeURL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+//                System.out.println(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }
+        ){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> mapObject = new HashMap<String, String>();
+                //will look into these soon
+                mapObject.put("customerId", Integer.toString(order.getCustomer().getId()));
+                mapObject.put("address",order.getCustomer().getAddress());
+                mapObject.put("date",order.getDate().toString());
+                mapObject.put("status",order.getStatus());
+                mapObject.put("price",order.getOrderDetail().getPrice());
+                mapObject.put("droneDescription", order.getOrderDetail().getDroneDescription());
+                mapObject.put("check", "1");
+                return mapObject;
+            }
+        };
+        stringRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(stringRequest);
+    }
+
+
 
 }

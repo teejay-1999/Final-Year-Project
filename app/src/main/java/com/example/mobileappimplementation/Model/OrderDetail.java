@@ -1,29 +1,27 @@
 package com.example.mobileappimplementation.Model;
 
 public class OrderDetail {
-    private String quantity;
-    private String droneOption;
+    private String price;
+    private String droneDescription;
 
-    public OrderDetail(String quantity, String droneOption) {
-        this.quantity = quantity;
-        this.droneOption = droneOption;
-
+    public OrderDetail(String price, String droneDescription) {
+        this.price = price;
+        this.droneDescription = droneDescription;
     }
 
-
-    public String getQuantity() {
-        return quantity;
+    public String getPrice() {
+        return price;
     }
 
-    public void setQuantity(String quantity) {
-        this.quantity = quantity;
+    public void setPrice(String price) {
+        this.price = price;
     }
 
-    public String getDroneOption() {
-        return droneOption;
+    public String getDroneDescription() {
+        return droneDescription;
     }
 
-    public void setDroneOption(String droneOption) {
-        this.droneOption = droneOption;
+    public void setDroneDescription(String droneDescription) {
+        this.droneDescription = droneDescription;
     }
 }

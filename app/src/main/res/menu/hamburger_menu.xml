@@ -1,18 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/home"
-        android:title="Home"/>
-    <item android:id="@+id/history"
-        android:title="History"/>
-    <item android:id="@+id/alerts"
-        android:title="Alerts"/>
-    <item android:id="@+id/spray_information"
-        android:title="Spray Information"/>
-    <item android:id="@+id/community_guideline"
-        android:title="Community Guidelines"/>
-    <item android:id="@+id/drone_order"
-        android:title="Drone Order"/>
-    <item android:id="@+id/log_out"
-        android:title="Log Out"/>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/home"
+            android:icon="@drawable/home_icon"
+            android:checked="true"
+            android:title="Home"
+            app:iconTint="@drawable/selector"/>
+        <item android:id="@+id/history"
+            android:title="History"
+            android:icon="@drawable/history_icon"
+            app:iconTint="@drawable/selector"/>
+        <item android:id="@+id/alerts"
+            android:title="Alerts"
+            android:icon="@drawable/alert_icon"
+            app:iconTint="@drawable/selector"/>
+        <item android:id="@+id/spray_information"
+            android:title="Spray Information"
+            android:icon="@drawable/spray_information_icon"
+            app:iconTint="@drawable/selector"/>
+        <item android:id="@+id/drone_order"
+            android:title="Drone Order"
+            android:icon="@drawable/order_icon"
+            app:iconTint="@drawable/selector"/>
+        <item android:id="@+id/log_out"
+            android:title="Log Out"
+            android:icon="@drawable/log_out_icon"
+            app:iconTint="@drawable/selector"/>
+    </group>
 
 </menu>

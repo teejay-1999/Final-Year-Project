@@ -214,7 +214,6 @@ public class SignUpController extends AppCompatActivity {
                     SharedPreferences preference = getSharedPreferences("USER_DATA", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = preference.edit();
                     editor.putInt("id", jsonArray.getJSONObject(0).getInt("id"));
-                    System.out.println(jsonArray.getJSONObject(0).getInt("id"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

@@ -41,6 +41,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.holder> {
                 e.printStackTrace();
             }
         }
+        System.out.println("Orders Array");
+        System.out.println(orderJsonArray);
         breakPoint += size;
         i = 0;
         while (value < breakPoint){
@@ -52,6 +54,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.holder> {
                 e.printStackTrace();
             }
         }
+        System.out.println("Order Details Array");
+        System.out.println(orderDetailJsonArray);
         breakPoint += size;
         i = 0;
         while (value < breakPoint){
@@ -63,6 +67,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.holder> {
                 e.printStackTrace();
             }
         }
+        System.out.println("Order Status Array");
+        System.out.println(orderStatusJsonArray);
         i = 0;
         int lastPoint = 0;
         while (i < 3){
@@ -73,6 +79,14 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.holder> {
                         JSONObject jsonObject = orderStatusJsonArray.getJSONObject(j);
                         orderStatusJsonArray.put(j,orderStatusJsonArray.getJSONObject(lastPoint));
                         orderStatusJsonArray.put(lastPoint,jsonObject);
+
+                        jsonObject = orderDetailJsonArray.getJSONObject(j);
+                        orderDetailJsonArray.put(j,orderDetailJsonArray.getJSONObject(lastPoint));
+                        orderDetailJsonArray.put(lastPoint,jsonObject);
+
+                        jsonObject = orderJsonArray.getJSONObject(j);
+                        orderJsonArray.put(j,orderJsonArray.getJSONObject(lastPoint));
+                        orderJsonArray.put(lastPoint,jsonObject);
                         lastPoint++;
                     }
                 }
@@ -84,6 +98,14 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.holder> {
                         JSONObject jsonObject = orderStatusJsonArray.getJSONObject(j);
                         orderStatusJsonArray.put(j,orderStatusJsonArray.getJSONObject(lastPoint));
                         orderStatusJsonArray.put(lastPoint,jsonObject);
+
+                        jsonObject = orderDetailJsonArray.getJSONObject(j);
+                        orderDetailJsonArray.put(j,orderDetailJsonArray.getJSONObject(lastPoint));
+                        orderDetailJsonArray.put(lastPoint,jsonObject);
+
+                        jsonObject = orderJsonArray.getJSONObject(j);
+                        orderJsonArray.put(j,orderJsonArray.getJSONObject(lastPoint));
+                        orderJsonArray.put(lastPoint,jsonObject);
                         lastPoint++;
                     }
                 }
@@ -95,6 +117,14 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.holder> {
                         JSONObject jsonObject = orderStatusJsonArray.getJSONObject(j);
                         orderStatusJsonArray.put(j,orderStatusJsonArray.getJSONObject(lastPoint));
                         orderStatusJsonArray.put(lastPoint,jsonObject);
+
+                        jsonObject = orderDetailJsonArray.getJSONObject(j);
+                        orderDetailJsonArray.put(j,orderDetailJsonArray.getJSONObject(lastPoint));
+                        orderDetailJsonArray.put(lastPoint,jsonObject);
+
+                        jsonObject = orderJsonArray.getJSONObject(j);
+                        orderJsonArray.put(j,orderJsonArray.getJSONObject(lastPoint));
+                        orderJsonArray.put(lastPoint,jsonObject);
                         lastPoint++;
                     }
                 }

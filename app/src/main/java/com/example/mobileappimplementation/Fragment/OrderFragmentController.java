@@ -24,7 +24,6 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.mobileappimplementation.Adapter.AlertAdapter;
 import com.example.mobileappimplementation.Adapter.OrderAdapter;
 import com.example.mobileappimplementation.Controller.APIDetails;
 import com.example.mobileappimplementation.R;
@@ -90,7 +89,6 @@ public class OrderFragmentController extends Fragment {
         View view = inflater.inflate(R.layout.order, container, false);
         retrieve(view, commonVariables);
 
-        //System.out.print(noOrderTextMessage);
         return view;
     }
     public void retrieve(View view, APIDetails commonVariables) {
@@ -109,6 +107,7 @@ public class OrderFragmentController extends Fragment {
                 }
                 else{
                     try {
+                        System.out.println(response);
                         JSONArray jsonArray = new JSONArray(response);
                         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewOrder);
                         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));

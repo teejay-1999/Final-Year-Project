@@ -106,6 +106,7 @@ public class LogInController extends AppCompatActivity {
         editor.putString("phoneNumber",jsonArray.getJSONObject(0).getString("phoneNumber"));
         editor.putString("password",jsonArray.getJSONObject(0).getString("password"));
         editor.putInt("id", jsonArray.getJSONObject(0).getInt("id"));
+        System.out.print(jsonArray.getJSONObject(0).getInt("id"));
         editor.commit();
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
     }

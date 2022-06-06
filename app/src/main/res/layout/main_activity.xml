@@ -15,10 +15,11 @@
             android:layout_height="wrap_content"
             android:id="@+id/toolbar"
             app:titleTextColor="@color/cardview_light_background"/>
+
         <FrameLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/container"/>
+            android:layout_height="match_parent" />
 
     </RelativeLayout>
     <com.google.android.material.navigation.NavigationView
@@ -27,6 +28,7 @@
         android:id="@+id/nav_view"
         app:menu="@menu/hamburger_menu"
         app:headerLayout="@layout/nav_header"
+        app:itemTextColor="@drawable/selector"
         android:layout_gravity="start"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>
