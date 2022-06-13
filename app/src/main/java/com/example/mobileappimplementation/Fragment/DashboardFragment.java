@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -29,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.mobileappimplementation.Handler.WeatherAPIHandler;
+import com.example.mobileappimplementation.MainActivity;
 import com.example.mobileappimplementation.Model.Weather;
 import com.example.mobileappimplementation.R;
 
@@ -100,6 +102,14 @@ public class DashboardFragment extends Fragment {
         TextView nameText = (TextView) view.findViewById(R.id.nameText);
         nameText.setText("Welcome " + firstName);
         checkIfLocationIsEnabled();
+        SharedPreferences preference = getActivity().getSharedPreferences("USER_DATA", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preference.edit();
+        if(preference.getBoolean("locationCheck",false)){
+            String location = preference.getString("location","0");
+            System.out.println(location);
+            WeatherAPIHandler weatherAPIHandler = new WeatherAPIHandler();
+            weatherAPIHandler.getCurrentWeatherInfo(location, getActivity().getApplicationContext(), view);
+        }
 
         return view;
 

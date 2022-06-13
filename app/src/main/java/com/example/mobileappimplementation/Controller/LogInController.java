@@ -40,7 +40,9 @@ public class LogInController extends AppCompatActivity {
         if(preference.contains("email")){
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
-        setContentView(R.layout.log_in);
+        else{
+            setContentView(R.layout.log_in);
+        }
 
     }
 

@@ -2,6 +2,7 @@ package com.example.mobileappimplementation;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,31 +12,35 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
-import android.app.appsearch.GetByDocumentIdRequest;
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
+import android.icu.number.IntegerWidth;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.mobileappimplementation.Controller.CultivationGuidelineController;
 import com.example.mobileappimplementation.Controller.DroneController;
-import com.example.mobileappimplementation.Controller.ImagesController;
 import com.example.mobileappimplementation.Controller.LogInController;
-import com.example.mobileappimplementation.Controller.OrderDetailController;
+import com.example.mobileappimplementation.Handler.ImageInspectionAPIHandler;
 import com.example.mobileappimplementation.Handler.WeatherAPIHandler;
 import com.example.mobileappimplementation.Fragment.AlertFragmentController;
 import com.example.mobileappimplementation.Fragment.DashboardFragment;
@@ -164,6 +169,11 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
                             List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                            SharedPreferences preference = getSharedPreferences("USER_DATA",Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = preference.edit();
+                            editor.putString("location",addressList.get(0).getLocality());
+                            editor.putBoolean("locationCheck", true);
+                            editor.commit();
                             WeatherAPIHandler weatherAPIHandler = new WeatherAPIHandler();
                             weatherAPIHandler.getCurrentWeatherInfo(addressList.get(0).getLocality(), getApplicationContext(), MainActivity.this.findViewById(R.id.dashboard));
                         } catch (IOException e) {
@@ -180,14 +190,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void captureImage(View view) {
+        boolean pick = true;
+        if(pick){
+            if(!checkCameraPermission()){
+                requestCameraPermission();
+            }
+            else{
+                openDialogBoxForImageInspection();
+            }
+        }
+    }
 
-//        Intent intent = new Intent(Intent.ACTION_PICK);
-//        intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//        startActivityForResult(intent,1000);
-        startActivity(new Intent(getApplicationContext(), ImagesController.class));
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestStoragePermission() {
+        String [] storageRequest = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        requestPermissions(storageRequest, 400);
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestCameraPermission() {
+        String [] cameraRequest = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        requestPermissions(cameraRequest, 200);
+    }
+
+    private boolean checkStoragePermission() {
+        boolean checkOne = ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        return checkOne;
     }
 
     private void checkIfLocationIsEnabled() {
@@ -228,4 +259,95 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void toDroneInspectionPage(View view) {
+        TextView droneInspectionText = (TextView) findViewById(R.id.drone_inspection_message2);
+        if(droneInspectionText.getText().toString().equals("Drone Inspection is not recommended")){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Drone Inspection is not recommended at the moment. Do you still want to proceed for drone inspection?");
+            builder.setCancelable(false);
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    //Map work to be done
+                }
+            });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.cancel();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+    }
+
+    private boolean checkCameraPermission() {
+        boolean checkOne = ContextCompat.checkSelfPermission(this,Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
+        boolean checkTwo = ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        return checkOne && checkTwo;
+
+    }
+
+    public void openCamera(View view){
+        final int REQUEST_CODE = 42;
+        Intent cameraOpener = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraOpener, REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == Activity.RESULT_OK){
+            if(requestCode == 42){
+                Bitmap photo = (Bitmap) data.getExtras().get("data");
+                Intent toImageInspection = new Intent();
+                toImageInspection.setClass(getApplicationContext(), ImageInspectionAPIHandler.class);
+                toImageInspection.putExtra("imageBitmapData", photo);
+                startActivity(toImageInspection);
+            }
+            else{
+                Uri photo = data.getData();
+                Intent toImageInspection = new Intent();
+                toImageInspection.setClass(getApplicationContext(), ImageInspectionAPIHandler.class);
+                toImageInspection.putExtra("imageUriData", photo);
+                startActivity(toImageInspection);
+            }
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case 200:{
+                if(grantResults.length > 0){
+                    boolean cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean storageAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    if(cameraAccepted && storageAccepted){
+                        openDialogBoxForImageInspection();
+                    }
+                }
+            }
+            break;
+        }
+    }
+    public void openDialogBoxForImageInspection(){
+        Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.dialgo_box_image_inspection);
+        dialog.show();
+    }
+
+    public void openGallery(View view) {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"),52);
+    }
+
 }
+

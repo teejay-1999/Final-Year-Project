@@ -100,7 +100,6 @@
             android:layout_marginLeft="16dp"
             android:fontFamily="sans-serif-black"
             android:textSize="15dp"
-            android:translationX="245dp"
             android:translationY="70dp"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -111,15 +110,15 @@
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:fontFamily="sans-serif-black"
+            android:gravity="center_vertical"
             android:textSize="18dp"
-            android:translationX="20dp"
             android:translationY="115dp"
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
             android:id="@+id/forecast_image2"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:translationX="250dp"
             android:translationY="10dp" />
 
@@ -139,6 +138,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/drone_inspection"
         android:layout_width="159dp"
+        android:onClick="toDroneInspectionPage"
         android:layout_height="128dp"
         android:layout_row="0"
         android:layout_rowWeight="1"

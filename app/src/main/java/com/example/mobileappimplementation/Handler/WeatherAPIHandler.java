@@ -57,17 +57,38 @@ public class WeatherAPIHandler {
                     month = firstLetter + remainingLetter;
                     dayOfWeek += ", " + currentDate.getDayOfMonth() + " " + month + " " + currentDate.getYear();
                     day.setText(dayOfWeek);
+                    String isDayStatus = response.getJSONObject("current").getString("is_day");
+//                    String isDayStatus = "1"; //for day night check (for the presentation)
                     String conditionText = response.getJSONObject("current").getJSONObject("condition").getString("text");
+                    System.out.println(conditionText);
+                    String temp = conditionText;
+                    String [] tempArray = temp.split(" ");
                     forecast.setText(conditionText);
+                    if(tempArray.length == 1){
+                        forecast.setTranslationX(700);
+                    }
+                    else {
+                        forecast.setTranslationX(630);
+                    }
                     conditionText.toLowerCase();
+                    if(conditionText.contains("rain") && tempArray.length > 1){
+                        forecast.setText("Possible rain");
+                    }
+                    if(conditionText.contains("thunderstorm") && tempArray.length > 1){
+                        forecast.setText("Possible thunderstorm");
+                    }
                     Picasso.get().load("https:" + response.getJSONObject("current").getJSONObject("condition").getString("icon")).into(forecastImage);
-                    if(!(conditionText.contains("rain")) && !(conditionText.contains("thunderstorm")) && !(conditionText.contains("precipitation")) && !(conditionText.contains("snow")) && !(conditionText.contains("wind"))){
+                    boolean conditionOne = !(conditionText.contains("rain")) && !(conditionText.contains("thunderstorm")) && !(conditionText.contains("precipitation")) && !(conditionText.contains("snow")) && !(conditionText.contains("wind"));
+                    boolean conditionTwo = isDayStatus.equals("1");
+                    if(conditionOne && conditionTwo){
                         droneInspectionMessage.setTextColor(Color.parseColor("green"));
                         droneInspectionMessage.setText("Drone Inspection is recommended");
+                        droneInspectionMessage.setTranslationX(70);
                     }
                     else{
                         droneInspectionMessage.setTextColor(Color.parseColor("red"));
                         droneInspectionMessage.setText("Drone Inspection is not recommended");
+                        droneInspectionMessage.setTranslationX(30);
                     }
 
 
